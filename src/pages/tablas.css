@@ -1,0 +1,86 @@
+.mt24 {
+  margin-top: 40px;
+}
+
+.ancho {
+  width: 50%;
+}
+.espacio {
+  padding: 0em 4em;
+}
+
+.espaciollenarfactura {
+  padding: 0.2em 2em;
+}
+
+.cabezeratbody {
+  width: 20%;
+  background-color: rgb(230, 246, 246);
+}
+
+.px-4 {
+  padding: "0 1rem";
+}
+
+.px-1 {
+  padding: 0 5px;
+}
+.cabezeratbody:hover {
+  background-color: rgb(217, 246, 246);
+}
+
+.text-center {
+  text-align: center;
+}
+.boton {
+  background: none;
+  border: none;
+  padding: 0;
+  height: 25px;
+}
+
+.botoneditar {
+  color: rgb(70, 140, 0);
+  outline: none;
+}
+
+.botoneliminar {
+  color: rgb(146, 0, 0);
+  outline: none;
+}
+
+.botoneliminar:hover {
+  color: rgb(197, 155, 155);
+}
+
+.botonAgregar {
+  color: rgb(24, 95, 0);
+  outline: none;
+}
+
+.botonAgregar:hover {
+  color: rgb(118, 159, 104);
+}
+
+.marginleft {
+  margin-left: 10px;
+}
+@media (max-width: 1300px) {
+  .espacio {
+    padding: 0em 3em;
+  }
+
+  .px-4 {
+    padding: "0 0.7rem";
+  }
+}
+
+@media (max-width: 800px) {
+  .espacio {
+    padding: 0em 2em;
+  }
+
+  .px-4 {
+    padding: "0 0.5rem";
+  }
+}

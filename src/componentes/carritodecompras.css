@@ -1,0 +1,29 @@
+.botonagregar {
+  border-radius: 5px;
+  border: 2px solid blueviolet;
+  background-color: aliceblue;
+  padding: 1px 0.5rem;
+}
+.botonagregar:hover {
+  background-color: rgb(186, 129, 239);
+  color: white;
+}
+
+.margintop {
+  margin-top: 5px;
+}
+
+.total {
+  color: rgb(255, 255, 255);
+  background-color: brown;
+  margin-left: 5px;
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  border-radius: 3px;
+}
+
+.div1 {
+  display: flex;
+  flex-direction: row;
+}

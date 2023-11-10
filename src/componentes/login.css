@@ -1,0 +1,115 @@
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.divInterno {
+  border: 2px solid rgb(2, 2, 140);
+  border-radius: 10px;
+  padding: 1em;
+  min-width: 220px;
+  min-height: 220px;
+  display: flex;
+  justify-content: center;
+  /*  align-items: center;  */
+}
+
+.alinearitems {
+  text-align: center;
+}
+
+.login {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.nombre {
+  border: 1px solid rgb(170, 170, 172);
+  outline: none;
+  border-radius: 4px;
+  height: 30px;
+  width: 250px;
+}
+
+.email {
+  border: 1px solid rgb(170, 170, 172);
+  outline: none;
+  border-radius: 4px;
+  height: 30px;
+  width: 250px;
+}
+
+.password {
+  border: 1px solid rgb(170, 170, 172);
+  outline: none;
+  border-radius: 4px;
+  height: 30px;
+  width: 180px;
+}
+
+.divdepassword {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.divrepetirpassword {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.ml-8 {
+  margin-left: 0.5rem;
+  background-color: rgb(255, 255, 255);
+}
+
+.buttoniniciarsesion {
+  outline: none;
+  margin-top: 0.8rem;
+  padding: 0.1rem 2rem;
+  background-color: rgb(2, 115, 140);
+  outline: none;
+  border-radius: 5px;
+}
+
+.buttoniniciarsesion:hover {
+  background-color: rgb(3, 99, 121);
+}
+
+.iniciar {
+  font-size: 0.8rem;
+  color: aliceblue;
+}
+
+.buttoncrearcuenta {
+  outline: none;
+  margin-top: 0.8rem;
+  padding: 0.01rem 2rem;
+  background-color: rgb(20, 140, 2);
+  outline: none;
+  border-radius: 5px;
+}
+
+.buttoncrearcuenta:hover {
+  background-color: rgb(15, 101, 2);
+}
+
+.camposVacios {
+  color: brown;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.margintop-5 {
+  margin-top: 0.5rem;
+}
+
+.usuariocreado {
+  font-size: 0.8rem;
+  color: rgb(72, 105, 36);
+  text-align: center;
+}

@@ -1,0 +1,16 @@
+.mt {
+  margin-top: 50px;
+}
+
+.button {
+  padding: 0.1rem 0.3rem;
+  border-radius: 5px;
+  background-color: blueviolet;
+  color: aliceblue;
+  border-color: azure;
+  margin-left: 15px;
+}
+
+.button:hover {
+  background-color: rgb(164, 77, 246);
+}

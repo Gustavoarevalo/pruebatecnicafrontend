@@ -1,0 +1,66 @@
+.containerllenarfactura {
+  display: flex;
+  width: 100%;
+  border: 2px solid black;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.alturamensajesvacios {
+  height: 40px;
+}
+
+.mensajevacio {
+  color: brown;
+  font-size: 12px;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+}
+
+.estilosruc {
+  outline: none;
+  border: 1px solid black;
+  margin-left: 5px;
+  height: 20px;
+  margin-top: 12px;
+  border-radius: 5px;
+}
+
+.ml {
+  margin-left: 15px;
+}
+
+.display {
+  display: flex;
+  flex-direction: column;
+}
+
+.totalllenarfactura {
+  margin-left: 5px;
+  color: rgb(53, 106, 0);
+}
+
+.ImpuestoIGV {
+  color: brown;
+}
+
+.ml-3 {
+  margin-left: 3px;
+}
+
+.guardarfactura {
+  outline: none;
+  background: green;
+  color: aliceblue;
+  border-radius: 2px;
+  height: 25px;
+  border: 1px solid black;
+}
+
+.guardarfactura:hover {
+  background: rgb(199, 249, 199);
+  color: rgb(0, 0, 0);
+}

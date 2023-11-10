@@ -1,0 +1,46 @@
+.container {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.containerTablaproduct {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+}
+
+.centrar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.anchomaximo {
+  width: 800px;
+}
+
+.botonagregar {
+  border-radius: 5px;
+  border: 2px solid blueviolet;
+  background-color: aliceblue;
+  padding: 1px 0.5rem;
+}
+.botonagregar:hover {
+  background-color: rgb(186, 129, 239);
+  color: white;
+}
+
+.botoncerrar {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: 1px solid transparent;
+  background-color: rgb(255, 255, 255);
+}
+
+.flexdirection {
+  flex-direction: row;
+}
