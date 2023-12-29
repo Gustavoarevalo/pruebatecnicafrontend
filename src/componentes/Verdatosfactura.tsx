@@ -62,7 +62,7 @@ const VerDatosFactura: React.FC<verdatosfacturaProps> = ({ cerrar, datos }) => {
               </tr>
             </thead>
             <tbody className="mt-4">
-              {datos.detalleFactura.map((FP) => (
+              {datos.detalleFactura.map((FP: any) => (
                 <tr key={FP.idItem} className="cabezeratbody">
                   <td className="text-center px-1">{FP.codigo}</td>
                   <td className="text-center px-1">{FP.nombre}</td>
