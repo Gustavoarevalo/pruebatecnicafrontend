@@ -12,6 +12,7 @@ import { linkProducto } from "../url/Url";
 import { MetodoDelete } from "../metodos/metodoDelete";
 import EditarProduct from "../componentes/editarproduct";
 import CarritodeCompras from "../componentes/carritodecompras";
+import { ObtenerJwtStore } from "../store/JwtStore";
 
 const Producto: React.FC = () => {
   const [OnpressAgregar, setOnpressAgregar] = useState<boolean>(false);
@@ -20,6 +21,7 @@ const Producto: React.FC = () => {
   const [datos, setDatos] = useState<any>(null);
   const [OnpressEditar, setOnpressEditar] = useState<boolean>(false);
   const [item, setItems] = useState<any[]>([]);
+  const { JWT } = ObtenerJwtStore();
 
   const customStyles = {
     position: "absolute",
@@ -42,7 +44,7 @@ const Producto: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     const url = `${linkProducto}${"/"}${id}`;
-    await MetodoDelete(url);
+    await MetodoDelete(url, JWT);
     setActualizarProductos(!actualizarProductos);
   };
 

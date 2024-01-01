@@ -12,6 +12,7 @@ import {
   ObtenerDatosFactura,
 } from "./store/obtenerdatos";
 import { ActualizarProductos } from "./store/actualizarproductos";
+import { ObtenerJwtStore } from "./store/JwtStore";
 
 function App() {
   const { inicio } = InicioSesion();
@@ -21,6 +22,9 @@ function App() {
   const { setProducto } = ObtenerDatosProductos();
   const { actualizarProductos } = ActualizarProductos();
   const { setFacturaDatos } = ObtenerDatosFactura();
+  const [jwt, setjwt] = useState<string>("");
+  const { setJWT } = ObtenerJwtStore();
+  const [datosleidos, setDatosLeidos] = useState<boolean>(false);
 
   useEffect(() => {
     obteneriniciosesion();
@@ -30,43 +34,52 @@ function App() {
     const iniciar = localStorage.getItem("inicio");
 
     if (iniciar !== null) {
+      const Obtenertoken = JSON.parse(iniciar);
+      setjwt(Obtenertoken.token);
+      setJWT(Obtenertoken.token);
       setActivoS(true);
     } else {
       setActivoS(false);
     }
+    setDatosLeidos(true);
   };
 
   useEffect(() => {
-    obetenerfamiliaProduct();
-  }, [actualizarFP]);
+    if (activoS) {
+      obetenerfamiliaProduct();
+    }
+  }, [actualizarFP, activoS]);
 
   const obetenerfamiliaProduct = async () => {
-    const response = await MetodoGet(linkFamiliaProducto);
+    const response = await MetodoGet(linkFamiliaProducto, jwt);
 
     setFamiliaProduct(response.data);
   };
 
   useEffect(() => {
-    obetenerProduct();
-  }, [actualizarProductos]);
+    if (activoS) {
+      obetenerProduct();
+    }
+  }, [actualizarProductos, activoS]);
 
   const obetenerProduct = async () => {
-    const response = await MetodoGet(linkProducto);
-
+    const response = await MetodoGet(linkProducto, jwt);
     setProducto(response.data);
   };
 
   useEffect(() => {
-    obetenerFacturaDatos();
-  }, [actualizarProductos]);
+    if (activoS) {
+      obetenerFacturaDatos();
+    }
+  }, [actualizarProductos, activoS]);
 
   const obetenerFacturaDatos = async () => {
-    const response = await MetodoGet(linkfactura);
+    const response = await MetodoGet(linkfactura, jwt);
 
     setFacturaDatos(response.data);
   };
 
-  return (
+  return datosleidos ? (
     <>
       {activoS ? (
         <BrowserRouter>
@@ -76,7 +89,7 @@ function App() {
         <Login />
       )}
     </>
-  );
+  ) : null;
 }
 
 export default App;

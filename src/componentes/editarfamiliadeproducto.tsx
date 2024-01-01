@@ -3,6 +3,7 @@ import { EditarFamiliaProductoProps } from "./interfaz/intezaseditardamiliaprodu
 import { ActualizarFP } from "../store/actualizarfamiliaproduct";
 import { linkFamiliaProducto } from "../url/Url";
 import { MetodoPut } from "../metodos/metodoPut";
+import { ObtenerJwtStore } from "../store/JwtStore";
 
 const EditarFamiliaProducto: React.FC<EditarFamiliaProductoProps> = ({
   cerrarguardar,
@@ -16,6 +17,7 @@ const EditarFamiliaProducto: React.FC<EditarFamiliaProductoProps> = ({
   const [codigomayor, setCodigomayor] = useState<string>("");
   const { actualizarFP, setActualizarFP } = ActualizarFP();
   const [codigoyaexiste, setCodigyaexiste] = useState<string>("");
+  const { JWT } = ObtenerJwtStore();
 
   const codigo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -84,7 +86,7 @@ const EditarFamiliaProducto: React.FC<EditarFamiliaProductoProps> = ({
   };
 
   const guardar = async (url: string) => {
-    const response = await MetodoPut(url, data);
+    const response = await MetodoPut(url, data, JWT);
 
     if (response.data == "El codigo ya existe") {
       setCodigyaexiste("el codigo ya existe");

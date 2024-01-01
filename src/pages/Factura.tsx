@@ -4,12 +4,18 @@ import { HiEye } from "react-icons/hi2";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import VerDatosFactura from "../componentes/Verdatosfactura";
-import { BsFillXOctagonFill } from "react-icons/bs";
+import { BsFillXOctagonFill, BsFillTrashFill } from "react-icons/bs";
+import { ActualizarProductos } from "../store/actualizarproductos";
+import { ObtenerJwtStore } from "../store/JwtStore";
+import { linkfactura } from "../url/Url";
+import { MetodoDelete } from "../metodos/metodoDelete";
 
 const Factura: React.FC = () => {
   const { FacturaDatos } = ObtenerDatosFactura();
   const [abrir, setAbrir] = useState<boolean>(false);
   const [odatos, setDatos] = useState<object>([]);
+  const { actualizarProductos, setActualizarProductos } = ActualizarProductos();
+  const { JWT } = ObtenerJwtStore();
 
   const customStyles = {
     position: "absolute",
@@ -31,6 +37,13 @@ const Factura: React.FC = () => {
     setAbrir(!abrir);
   };
 
+  const handleDelete = async (id: number) => {
+    const url = `${linkfactura}${"/"}${id}`;
+    await MetodoDelete(url, JWT);
+    setActualizarProductos(!actualizarProductos);
+  };
+
+  console.log(FacturaDatos);
   return (
     <>
       <div>
@@ -44,6 +57,7 @@ const Factura: React.FC = () => {
                 <th className="espacio">IGV</th>
                 <th className="espacio">Subtotal</th>
                 <th className="espacio">{""}</th>
+                <th className="espacio">Eliminar</th>
               </tr>
             </thead>
             <tbody className="mt-4">
@@ -66,6 +80,14 @@ const Factura: React.FC = () => {
                           height: 20,
                           color: "green",
                         }}
+                      />
+                    </button>
+                  </td>
+                  <td className="text-center">
+                    <button className="boton">
+                      <BsFillTrashFill
+                        className="botoneliminar"
+                        onClick={() => handleDelete(FP.idFactura)}
                       />
                     </button>
                   </td>

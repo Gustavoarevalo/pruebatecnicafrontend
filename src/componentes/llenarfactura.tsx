@@ -4,6 +4,8 @@ import LlenarFacturaProps from "./interfaz/interfazllenarfactura";
 import { MetodoPost } from "../metodos/post";
 import { linkfactura, linkdetallefactura } from "../url/Url";
 import { ActualizarProductos } from "../store/actualizarproductos";
+import { ObtenerJwtStore } from "../store/JwtStore";
+import Decimal from "decimal.js";
 
 const LlenarFactura: React.FC<LlenarFacturaProps> = ({
   ItemsFactura,
@@ -17,6 +19,7 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
   const [razonVacio, setRazonVacio] = useState<string>("");
   const [igv, setIgv] = useState<number>(0);
   const { actualizarProductos, setActualizarProductos } = ActualizarProductos();
+  const { JWT } = ObtenerJwtStore();
 
   const ObtenerRuc = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRuc(e.target.value);
@@ -31,17 +34,18 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
   }, [ItemsFactura]);
 
   const obtenersubtotal = (items: any) => {
-    let subtotal = 0;
+    let subtotal = new Decimal(0);
     for (let i = 0; i < items.length; i++) {
-      const cantidad = items[i].cantidad;
-      const precio = items[i].precio;
-      const multiplicacion = cantidad * precio;
-      subtotal = subtotal + multiplicacion;
+      const cantidad = new Decimal(items[i].cantidad);
+      const precio = new Decimal(items[i].precio);
+      const multiplicacion = cantidad.mul(precio);
+      subtotal = subtotal.plus(multiplicacion);
     }
+    const subtotalNumero = subtotal.toNumber();
 
-    setSubTotal(subtotal);
+    setSubTotal(subtotalNumero);
 
-    obtenerIGV(subtotal);
+    obtenerIGV(subtotalNumero);
   };
 
   const obtenerIGV = (sub: number) => {
@@ -58,7 +62,10 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
   const obtenertotal = (sub: number, igv: number) => {
     let total = 0;
 
-    total = sub + igv;
+    let Subtotal = new Decimal(sub);
+    let Igv = new Decimal(igv);
+
+    total = Subtotal.plus(Igv).toNumber();
 
     setTotal(total);
   };
@@ -101,14 +108,14 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
     Ruc: ruc,
     Razonsocial: razonsocial,
     Subtotal: subtotal,
-    FechaCreacion: new Date(),
+    //NumerodeFactura: 0,
     IGV: igv,
     Total: total,
-    //  DetalleFacturas: ItemsFactura,
+    // DetalleFacturas: ItemsFactura,
   };
 
   const Guardar = async () => {
-    const response = await MetodoPost(linkfactura, data);
+    const response = await MetodoPost(linkfactura, data, JWT);
 
     if (response.status == 200) {
       const ID = response.data;
@@ -125,13 +132,13 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
           Nombre: element.nombre,
           Precio: element.precio,
           Cantidad: element.cantidad,
-          Subtotal: element.cantidad * element.precio,
-          IdFactura: id,
+          //  Subtotal: element.cantidad * element.precio,
+          IdCabezeraFactura: id,
         };
 
         const url = `${linkdetallefactura}?Idproducto=${element.idProducto}`;
 
-        MetodoPost(url, datos);
+        MetodoPost(url, datos, JWT);
         setActualizarProductos(!actualizarProductos);
         cerrar(false);
       });
@@ -220,7 +227,7 @@ const LlenarFactura: React.FC<LlenarFacturaProps> = ({
                   <td className="text-center px-1">{FP.precio}</td>
                   <td className="text-center px-1">{FP.cantidad}</td>
                   <td className="text-center px-1">
-                    {FP.precio * FP.cantidad}
+                    {new Decimal(FP.precio).mul(FP.cantidad).toString()}
                   </td>
                 </tr>
               ))}

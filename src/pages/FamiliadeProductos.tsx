@@ -11,6 +11,7 @@ import { ActualizarFP } from "../store/actualizarfamiliaproduct";
 import { linkFamiliaProducto } from "../url/Url";
 import { MetodoDelete } from "../metodos/metodoDelete";
 import EditarFamiliaProducto from "../componentes/editarfamiliadeproducto";
+import { ObtenerJwtStore } from "../store/JwtStore";
 
 const FamiliadeProductos: React.FC = () => {
   const [OnpressAgregar, setOnpressAgregar] = useState<boolean>(false);
@@ -18,6 +19,7 @@ const FamiliadeProductos: React.FC = () => {
   const { actualizarFP, setActualizarFP } = ActualizarFP();
   const [datos, setDatos] = useState<any>(null);
   const [OnpressEditar, setOnpressEditar] = useState<boolean>(false);
+  const { JWT } = ObtenerJwtStore();
 
   const customStyles = {
     position: "absolute",
@@ -41,7 +43,7 @@ const FamiliadeProductos: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     const url = `${linkFamiliaProducto}${"/"}${id}`;
-    await MetodoDelete(url);
+    await MetodoDelete(url, JWT);
     setActualizarFP(!actualizarFP);
   };
 

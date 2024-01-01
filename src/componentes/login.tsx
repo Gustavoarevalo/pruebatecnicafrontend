@@ -3,9 +3,9 @@ import { useState } from "react";
 import { HiEye } from "react-icons/hi2";
 import { HiEyeSlash } from "react-icons/hi2";
 import { registro, login } from "../url/Url";
-import { MetodoPost } from "../metodos/post";
 import ValidarCorreo from "./validarcorreo";
 import { InicioSesion } from "../store/iniciosesion";
+import { MetodoPostLogin } from "../metodos/MetodoPostLogin";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -44,7 +44,11 @@ const Login = () => {
   };
 
   const campos = [
-    { campo: user, mensaje: "Por Favor Ingrese Nombre", setMensaje: setUserv },
+    {
+      campo: user,
+      mensaje: "Por Favor Ingrese El User Name",
+      setMensaje: setUserv,
+    },
     {
       campo: email,
       mensaje: "Por Favor Ingrese Correo Electronico",
@@ -64,9 +68,9 @@ const Login = () => {
 
   const camposlogin = [
     {
-      campo: email,
-      mensaje: "Por Favor Ingrese Correo Electronico",
-      setMensaje: setEmailv,
+      campo: user,
+      mensaje: "Por Favor Ingrese El User Name",
+      setMensaje: setUserv,
     },
     {
       campo: password,
@@ -76,8 +80,8 @@ const Login = () => {
   ];
 
   const data: object = {
-    correo: email,
-    contrasenia: password,
+    username: user.trim(),
+    password: password.trim(),
   };
 
   const verificarConstLogin = () => {
@@ -100,23 +104,25 @@ const Login = () => {
       }
     });
 
-    const validar = ValidarCorreo(email);
-    if (validar) {
-      Login(data);
-    } else {
-      setUserB("Ingrese un correo electrónico valido");
-    }
+    Login(data);
   };
 
   const Login = async (data: object) => {
     setUserB("");
-    const response = await MetodoPost(login, data);
 
-    if (response.data === "usuario bloqueado") {
+    const response = await MetodoPostLogin(login, data);
+
+    console.log(response);
+
+    if (response.data === "usuariobloqueado") {
       setUserB("Usuario Bloqueaqdo, Intente con otro correo");
       return;
     }
-    if (response.data === "Invalid credentials") {
+    if (response.data === "Login incorrecto") {
+      setUserB("Login Incorrecto");
+      return;
+    }
+    if (response.data === "contraseña Invalida") {
       setUserB("Contraseña Incorrecta");
       return;
     }
@@ -124,13 +130,16 @@ const Login = () => {
       guardariniciosesion(response.data);
     }
   };
-  const guardariniciosesion = (nombre: string) => {
-    interface data {
-      nombre: string;
-      verdadero: boolean;
-    }
-    const data: data = {
-      nombre: nombre,
+
+  interface response {
+    token: string;
+    expiracion: string;
+  }
+
+  const guardariniciosesion = (dtaGuardar: response) => {
+    const data: object = {
+      token: dtaGuardar.token,
+      expiracion: dtaGuardar.expiracion,
       verdadero: true,
     };
     localStorage.setItem("inicio", JSON.stringify(data));
@@ -161,7 +170,7 @@ const Login = () => {
     if (validar) {
       if (password === repetirpass) {
         const nuevaData: object = {
-          nombre: user,
+          email: email.trim(),
           ...data,
         };
 
@@ -175,7 +184,7 @@ const Login = () => {
   };
 
   const RegistarUsuario = async (data: object) => {
-    const response = await MetodoPost(registro, data);
+    const response = await MetodoPostLogin(registro, data);
 
     if (response.status === 200) {
       setUsuarioCreado("Usuario Creado");
@@ -195,24 +204,27 @@ const Login = () => {
 
           {crearcuenta && (
             <div className="margintop-5">
-              <p className="camposVacios">{userV}</p>
+              <p className="camposVacios">{emailV}</p>
               <input
                 className="nombre"
-                type="text"
-                placeholder="Nombres"
-                value={user}
-                onChange={(e) => setUser(e.target.value)}
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
           )}
+
           <div className="margintop-5">
-            <p className="camposVacios">{emailV}</p>
+            <p className="camposVacios">{userV}</p>
             <input
               className="email"
-              type="email"
-              placeholder="Emaiil"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="User Name"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+              required
             />
             <div className="margintop-5">
               <p className="camposVacios">{passwordV}</p>
@@ -223,6 +235,7 @@ const Login = () => {
                   placeholder="Contraseña"
                   value={password}
                   onChange={handlePassword}
+                  required
                 />
 
                 <button
@@ -263,6 +276,7 @@ const Login = () => {
                     placeholder=" Confirmar Contraseña"
                     value={repetirpass}
                     onChange={handleRepetirPassword}
+                    required
                   />
 
                   <button

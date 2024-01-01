@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { AgregarFamiliaProducto } from "../url/Url";
 import { MetodoPost } from "../metodos/post";
 import { ActualizarFP } from "../store/actualizarfamiliaproduct";
+import { ObtenerJwtStore } from "../store/JwtStore";
 
 interface AgregarFamiliadeProductoProps {
   cerrarguardar: (valor: boolean) => void;
@@ -19,6 +20,7 @@ const AgregarFamiliadeProducto: React.FC<AgregarFamiliadeProductoProps> = ({
   const [codigomayor, setCodigomayor] = useState<string>("");
   const { actualizarFP, setActualizarFP } = ActualizarFP();
   const [codigoyaexiste, setCodigyaexiste] = useState<string>("");
+  const { JWT } = ObtenerJwtStore();
 
   const codigo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -88,7 +90,7 @@ const AgregarFamiliadeProducto: React.FC<AgregarFamiliadeProductoProps> = ({
   };
 
   const guardar = async () => {
-    const response = await MetodoPost(AgregarFamiliaProducto, data);
+    const response = await MetodoPost(AgregarFamiliaProducto, data, JWT);
 
     if (response.data == "el codigo ya existe") {
       setCodigyaexiste("el codigo ya existe");

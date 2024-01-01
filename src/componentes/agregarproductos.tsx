@@ -5,6 +5,8 @@ import { linkProducto } from "../url/Url";
 import { MetodoPost } from "../metodos/post";
 import { ActualizarProductos } from "../store/actualizarproductos";
 import { ObtenerDatosFP } from "../store/obtenerdatos";
+import { ObtenerJwtStore } from "../store/JwtStore";
+import ValidarNumeros from "./funciones/ValidarNumeros";
 
 interface AgregarProductoProps {
   cerrarguardar: (valor: boolean) => void;
@@ -13,8 +15,10 @@ interface AgregarProductoProps {
 const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
   const [agregarCodigo, setAgregarCodigo] = useState<string>("");
   const [agregarNombre, setAgregarNombre] = useState<string>("");
-  const [Precio, setAgregarPrecio] = useState<number>(0);
-  const [stock, setAgregarStock] = useState<number>(0);
+  const [Precio, setPrecio] = useState<number>(0);
+  const [PrecioString, setPrecioString] = useState<string>("");
+  const [stock, setStock] = useState<number | null>(null);
+  const [stockString, setStockString] = useState<string>("");
   const [agregarActivo, setAgregarActivo] = useState<boolean>(true);
   const [codigoVacio, setCodigoVacio] = useState<string>("");
   const [NombreVacio, setNombreVacio] = useState<string>("");
@@ -26,6 +30,7 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
   const { familiaproduct } = ObtenerDatosFP();
   const [selectFamiliaP, setSelectFamiliaP] = useState<any>("");
   const [familiaeVacio, setFamiliaVacio] = useState<string>("");
+  const { JWT } = ObtenerJwtStore();
 
   const codigo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -38,17 +43,40 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
   };
 
   const Precioinput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPrecioerror("");
     const value = e.target.value;
-    let convertirnumero: number = 0;
-    convertirnumero = parseInt(value);
-    setAgregarPrecio(convertirnumero);
+
+    const validarPrecio = ValidarNumeros(value);
+    if (validarPrecio === "caracteres") {
+      setPrecioerror("Ingrese Solo Numeros");
+    }
+    if (validarPrecio === "haymasdeunpunto") {
+      setPrecioerror("solo se puede agregar un punto decimal");
+    }
+    if (validarPrecio === true) {
+      let convertirnumero: number = 0;
+      convertirnumero = parseFloat(value);
+      setPrecio(convertirnumero);
+    }
+
+    setPrecioString(value);
   };
 
   const Stockinput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    let convertirnumero: number = 0;
-    convertirnumero = parseInt(value);
-    setAgregarStock(convertirnumero);
+
+    const validarStock = ValidarNumeros(value);
+
+    if (validarStock === "caracteres") {
+      setStockerror("Ingrese Solo Numeros");
+    }
+
+    if (validarStock === true) {
+      let convertirnumero: number = 0;
+      convertirnumero = parseInt(value);
+      setStock(convertirnumero);
+    }
+    setStockString(value);
   };
 
   const itemselect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -89,12 +117,12 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
   const camposNumeros = [
     {
       campo: Precio,
-      mensaje: "no puede ser cero",
+
       setMensaje: setPrecioerror,
     },
     {
       campo: stock,
-      mensaje: "no puede ser cero",
+
       setMensaje: setStockerror,
     },
   ];
@@ -105,6 +133,8 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
     setCodigomayor("");
     setCodigoVacio("");
     setNombreVacio("");
+    setPrecioerror("");
+    setStockerror("");
     var camposVacios: boolean = false;
 
     campos.forEach(({ campo, mensaje, setMensaje }) => {
@@ -113,10 +143,14 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
         camposVacios = true;
       }
     });
-
-    camposNumeros.forEach(({ campo, mensaje, setMensaje }) => {
-      if (campo <= 0) {
-        setMensaje(mensaje);
+    camposNumeros.forEach(({ campo, setMensaje }) => {
+      if (!isNaN(Number(campo))) {
+        if (Number(campo) < 0) {
+          setMensaje("No se puede ingresar 0");
+          camposVacios = true;
+        }
+      } else {
+        setMensaje("Ingrese solo números");
         camposVacios = true;
       }
     });
@@ -147,15 +181,15 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
     Nombre: agregarNombre,
     Codigo: agregarCodigo,
     Activo: agregarActivo,
-    precio: Precio,
+    Precio: Precio,
     Stock: stock,
-    FechaCreacion: new Date(),
     IdFamilia: selectFamiliaP.idFamilia,
-    FamiliadeProducto: selectFamiliaP,
+    //  FamiliadeProductos: selectFamiliaP,
   };
 
   const guardar = async () => {
-    const response = await MetodoPost(linkProducto, data);
+    const response = await MetodoPost(linkProducto, data, JWT);
+    console.log(response);
 
     if (response.data == "El código ya existe.") {
       setCodigyaexiste("El código ya existe.");
@@ -202,9 +236,9 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
           <p>Precio</p>
           <input
             className="input"
-            type="number"
+            type="text"
             placeholder="Precio"
-            value={Precio}
+            value={PrecioString}
             onChange={Precioinput}
           />
         </div>
@@ -214,9 +248,9 @@ const AgregarProducto: React.FC<AgregarProductoProps> = ({ cerrarguardar }) => {
           <p>Stock</p>
           <input
             className="input"
-            type="number"
+            type="text"
             placeholder="Stock"
-            value={stock}
+            value={stockString}
             onChange={Stockinput}
           />
         </div>
